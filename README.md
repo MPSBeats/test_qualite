@@ -28,7 +28,7 @@ git clone https://github.com/<ton-nom-utilisateur>/<nom-du-repo>.git
 cd <nom-du-repo>
 ```
 
-###2️⃣ Installer les dépendances
+### 2️⃣ Installer les dépendances
 
 Avant tout, vérifie que **Node.js** (version 18 ou supérieure) est installé sur ta machine.  
 Ensuite, installe les dépendances avec :
