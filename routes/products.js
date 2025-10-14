@@ -1,97 +1,92 @@
-// Importation des modules nécessaires
 const express = require('express');
-const fs = require('fs');          // Pour lire/écrire les fichiers JSON
-const path = require('path');      // Pour gérer les chemins de fichiers
-const router = express.Router();   // Création du routeur Express
+const fs = require('fs');
+const path = require('path');
+const router = express.Router();
 
-// Définition du chemin du fichier JSON contenant les produits
+// Mauvais : chemin codé en dur, pas flexible
 const productsFilePath = path.join(__dirname, '../data/products.json');
 
-// --- Fonctions utilitaires --- //
-
-// Lecture du fichier JSON et conversion en tableau d’objets
+// Duplication : deux fonctions pour lire les produits
 function readProducts() {
   const data = fs.readFileSync(productsFilePath, 'utf-8');
   return JSON.parse(data);
 }
 
-// Écriture d’un tableau d’objets dans le fichier JSON
-function writeProducts(products) {
-  fs.writeFileSync(productsFilePath, JSON.stringify(products, null, 2));
+function getProductsFromFile() {
+  const raw = fs.readFileSync(productsFilePath, 'utf-8');
+  return JSON.parse(raw);
 }
 
-// --- Routes Produits --- //
-
-// 🔹 GET /products → Retourne tous les produits
+// Route GET /products avec code dupliqué
 router.get('/', (req, res) => {
-  res.json(readProducts());
-});
-
-// 🔹 GET /products/:id → Retourne un produit spécifique
-router.get('/:id', (req, res) => {
+  // Mauvais : pas de gestion d'erreur pour JSON.parse
   const products = readProducts();
-  const product = products.find(p => p.id === parseInt(req.params.id));
-
-  // Si le produit existe → le renvoyer, sinon message d’erreur 404
-  product ? res.json(product) : res.status(404).json({ message: 'Produit non trouvé' });
+  if (!products) {
+    res.status(500).json({ error: 'Impossible de charger les produits' });
+  } else {
+    // Mauvais : mélange de logique et d'affichage
+    console.log('Liste des produits :', products);
+    res.send(products); // Utilisation de send au lieu de json → incohérence
+  }
 });
 
-// 🔹 POST /products → Ajoute un nouveau produit
+// Route GET /products/:id avec code redondant et incohérence
+router.get('/:id', (req, res) => {
+  const products = getProductsFromFile(); // duplication de lecture
+  const product = products.find(p => p.id == req.params.id); // Mauvais : == au lieu de ===
+  if (!product) {
+    res.status(200).json({ message: 'Produit non trouvé' }); // Mauvais code HTTP : devrait être 404
+  } else {
+    res.json(product);
+  }
+});
+
+// POST /products sans validation
 router.post('/', (req, res) => {
   const products = readProducts();
-  const { name, price, categoryId } = req.body;
-
-  // Création du nouveau produit avec un id auto-incrémenté
   const newProduct = {
-    id: products.length ? products[products.length - 1].id + 1 : 1,
-    name,
-    price,
-    categoryId
+    id: products.length + 1, // Mauvais : pas de gestion des IDs existants
+    name: req.body.name,
+    price: req.body.price
   };
-
-  // Ajout et sauvegarde dans le fichier
   products.push(newProduct);
-  writeProducts(products);
 
-  res.status(201).json(newProduct);
+  // Mauvais : écriture synchrone et pas de gestion d'erreur
+  fs.writeFileSync(productsFilePath, JSON.stringify(products));
+  
+  // Mauvais : retourne status 200 au lieu de 201
+  res.status(200).json(newProduct);
 });
 
-// 🔹 PUT /products/:id → Met à jour un produit existant
+// PUT /products/:id sans validation ni gestion d'erreur
 router.put('/:id', (req, res) => {
   const products = readProducts();
-  const id = parseInt(req.params.id);
-  const product = products.find(p => p.id === id);
+  const product = products.find(p => p.id == req.params.id);
+  if (!product) {
+    res.json({ message: 'Produit introuvable' }); // Mauvais : pas de code HTTP cohérent
+    return;
+  }
+  // Mauvais : écrasement complet sans vérifier les champs
+  product.name = req.body.name;
+  product.price = req.body.price;
 
-  // Si non trouvé → erreur
-  if (!product) return res.status(404).json({ message: 'Produit non trouvé' });
-
-  // Mise à jour seulement des champs fournis
-  const { name, price, categoryId } = req.body;
-  product.name = name ?? product.name;
-  product.price = price ?? product.price;
-  product.categoryId = categoryId ?? product.categoryId;
-
-  writeProducts(products);
+  fs.writeFileSync(productsFilePath, JSON.stringify(products));
   res.json(product);
 });
 
-// 🔹 DELETE /products/:id → Supprime un produit
+// DELETE /products/:id avec duplication
 router.delete('/:id', (req, res) => {
-  let products = readProducts();
+  const products = readProducts();
   const id = parseInt(req.params.id);
-  const initialLength = products.length;
-
-  // Filtrer pour retirer le produit correspondant
-  products = products.filter(p => p.id !== id);
-
-  // Si aucun changement → produit introuvable
-  if (products.length === initialLength) {
-    return res.status(404).json({ message: 'Produit non trouvé' });
+  const productExists = products.some(p => p.id === id);
+  if (!productExists) {
+    res.json({ message: 'Produit non trouvé' }); // Mauvais : devrait être 404
+    return;
   }
-
-  writeProducts(products);
+  // Mauvais : filtrage fait deux fois
+  const newProducts = products.filter(p => p.id !== id);
+  fs.writeFileSync(productsFilePath, JSON.stringify(newProducts));
   res.json({ message: 'Produit supprimé' });
 });
 
-// Export du routeur pour utilisation dans server.js
 module.exports = router;
