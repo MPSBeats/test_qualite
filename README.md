@@ -59,7 +59,10 @@ Tu verras dans la console :
 ```bash
 ✅ Serveur démarré sur le port 3000
 ```
+
 📁 Structure du projet
+
+```bash
 mini-api-catalogue/
 │
 ├── data/
@@ -77,8 +80,10 @@ mini-api-catalogue/
 ├── package.json             → Configuration du projet Node
 ├── server.js                → Point d’entrée de l’application
 └── README.md                → Documentation du projet
+```
 
 🧩 Utilisation de l’API
+```bash
 🔹 Produits (/products)
 Méthode	Endpoint	Description
 GET	/products	Liste tous les produits
@@ -111,17 +116,18 @@ GET	/categories/:id	Affiche une catégorie spécifique
 POST	/categories	Ajoute une nouvelle catégorie
 PUT	/categories/:id	Met à jour une catégorie
 DELETE	/categories/:id	Supprime une catégorie
+```
 🧪 Lancer les tests unitaires
 
 Si tu as un fichier tests/api.test.js, tu peux exécuter les tests avec :
-
+```bash
 npm test
-
+```
 
 ou, si tu lances sans Jest installé :
-
+```bash
 node tests/api.test.js
-
+```
 
 💡 Assure-toi que ton serveur n’est pas déjà en cours d’exécution avant de lancer les tests.
 
@@ -134,10 +140,10 @@ jest (optionnel)	Tests unitaires automatiques
 🚫 Fichiers ignorés ( .gitignore )
 
 Le fichier .gitignore exclut certains dossiers/fichiers du dépôt :
-
+```bash
 node_modules/
 .env
-
+```
 
 
 
