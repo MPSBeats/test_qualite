@@ -35,6 +35,7 @@ Ensuite, installe les dépendances avec :
 
 ```bash
 npm install
+```
 
 Cela installera :
 
@@ -47,17 +48,17 @@ cors → autoriser les requêtes cross-origin
 ▶️ Lancer le serveur
 
 Une fois les dépendances installées, tu peux démarrer l’API avec :
-
+```bash
 node server.js
-
+```
 
 Par défaut, le serveur démarre sur :
 👉 http://localhost:3000
 
 Tu verras dans la console :
-
+```bash
 ✅ Serveur démarré sur le port 3000
-
+```
 📁 Structure du projet
 mini-api-catalogue/
 │
