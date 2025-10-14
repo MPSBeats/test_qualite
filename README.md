@@ -1,38 +1,39 @@
 # test_qualite
 
-🛍️ Mini-API Catalogue (Node.js / Express)
+# 🛍️ Mini-API Catalogue (Node.js / Express)
 
-Cette mini-API permet de gérer un catalogue de produits et leurs catégories.
+Cette mini-API permet de gérer un **catalogue de produits** et leurs **catégories**.  
 Elle expose deux groupes d’endpoints :
+- `/products` → pour la gestion des produits ;
+- `/categories` → pour la gestion des catégories de produits.
 
-/products → pour la gestion des produits ;
+---
 
-/categories → pour la gestion des catégories de produits.
+## 🚀 Fonctionnalités principales
 
-🚀 Fonctionnalités principales
+- Récupérer la liste complète des produits et catégories  
+- Obtenir un élément précis par son `id`  
+- Ajouter, modifier et supprimer un produit  
+- Persistance des données dans des fichiers JSON (`/data/products.json` et `/data/categories.json`)  
+- Architecture simple et claire avec Express.js  
 
-Récupérer la liste complète des produits et catégories
+---
 
-Obtenir un élément précis par son id
+## ⚙️ Installation et configuration
 
-Ajouter, modifier et supprimer un produit
+### 1️⃣ Cloner le dépôt
 
-Persistance des données dans des fichiers JSON (/data/products.json et /data/categories.json)
-
-Architecture simple et claire avec Express.js
-
-⚙️ Installation et configuration
-1️⃣ Cloner le dépôt
+```bash
 git clone https://github.com/<ton-nom-utilisateur>/<nom-du-repo>.git
 cd <nom-du-repo>
 
-2️⃣ Installer les dépendances
+### 2️⃣ Installer les dépendances
 
-Avant tout, vérifie que Node.js (version 18 ou supérieure) est installé sur ta machine.
+Avant tout, vérifie que **Node.js** (version 18 ou supérieure) est installé sur ta machine.  
 Ensuite, installe les dépendances avec :
 
+```bash
 npm install
-
 
 Cela installera :
 
@@ -134,3 +135,8 @@ Le fichier .gitignore exclut certains dossiers/fichiers du dépôt :
 
 node_modules/
 .env
+
+
+
+
+Réalisé par Sacha Simon , Dorian Roux et Yanis Slimani
